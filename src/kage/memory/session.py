@@ -23,6 +23,10 @@ class SessionMemory:
         """Record that a file was modified."""
         if path not in self.modified_files:
             self.modified_files.append(path)
+
+    def get_modified_files(self) -> list[str]:
+        """Get list of modified files."""
+        return self.modified_files.copy()
     
     def record_error(self, error: str, context: dict[str, Any] | None = None) -> None:
         """Record an error for future reference."""
