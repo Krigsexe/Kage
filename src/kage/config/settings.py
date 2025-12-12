@@ -13,7 +13,7 @@ class LLMSettings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="KAGE_LLM_")
     
     provider: Literal["ollama", "openai"] = "ollama"
-    model: str = "qwen2.5-coder:1.5b"  # Use the model you have installed
+    model: str = "qwen2.5-coder:7b"  # Use 7B for better quality
     ollama_host: str = "http://localhost:11434"
     openai_api_key: str | None = None
     openai_model: str = "gpt-4o-mini"
