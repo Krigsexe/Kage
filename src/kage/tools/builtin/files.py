@@ -256,7 +256,8 @@ class DirectoryListTool(BaseTool):
             ],
         )
     
-    async def execute(self, path: str, depth: int = 2) -> ToolResult:
+    async def execute(self, path: str, depth: int | None = 2) -> ToolResult:
+        depth = depth if depth is not None else 2  # Handle LLM passing None
         dir_path = Path(path).resolve()
         
         if not dir_path.exists():

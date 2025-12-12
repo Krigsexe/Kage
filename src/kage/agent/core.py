@@ -4,6 +4,7 @@ import json
 import re
 from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
 from typing import Any, AsyncIterator
 
 from kage.llm.base import LLMClient, Message
@@ -40,16 +41,19 @@ class AgentStep:
 
 SYSTEM_PROMPT = """You are KAGE, a coding assistant.
 
-## Tools
+## Available Tools
 {tools_description}
 
-## Rules
-1. To use a tool, reply ONLY with JSON: {{"tool": "name", "args": {{...}}}}
-2. After getting a tool result, give your FINAL ANSWER in plain text (no JSON)
-3. Never assume - use file_read before editing files
+## CRITICAL RULES
+1. TOOL CALL: Reply with ONLY this JSON, nothing else:
+   {{"tool": "name", "args": {{...}}}}
+
+2. AFTER "[OK] Tool executed": Give your FINAL ANSWER in plain text.
+   DO NOT call another tool. DO NOT output JSON. Just answer the question.
+
+3. Never guess file contents - read first.
 
 Project: {project_path}
-CWD: {cwd}
 """
 
 
@@ -75,8 +79,7 @@ class Agent:
         
         system = SYSTEM_PROMPT.format(
             tools_description=tools_desc,
-            project_path=self.memory.project_path or "Not initialized",
-            cwd=self.memory.cwd,
+            project_path=self.memory.project_path or Path.cwd(),
         )
         
         self.messages.append(Message(role="system", content=system))
