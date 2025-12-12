@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: kage-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+    # GPU support (uncomment for NVIDIA GPU)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+  kage:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: kage-app
+    depends_on:
+      - ollama
+    environment:
+      - KAGE_LLM_OLLAMA_HOST=http://ollama:11434
+      - KAGE_LLM_MODEL=qwen2.5-coder:1.5b
+      - KAGE_TOOL_SANDBOX_ENABLED=false
+    volumes:
+      - kage-data:/home/kage/.kage
+      - ./workspace:/workspace
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+    command: ["chat"]
+
+volumes:
+  ollama-data:
+  kage-data:

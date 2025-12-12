@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip install:*)",
+      "Bash(kage doctor:*)",
+      "Bash(ollama list:*)",
+      "Bash(kage version:*)",
+      "Bash(kage init:*)",
+      "Bash(kage --help:*)",
+      "Bash(python:*)",
+      "Bash(dir:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}
